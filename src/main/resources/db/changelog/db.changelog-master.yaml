@@ -1,0 +1,203 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: rules
+            columns:
+              - column:
+                  name: rule_id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: source_ip
+                  type: varchar(15)
+              - column:
+                  name: destination_ip
+                  type: varchar(15)
+              - column:
+                  name: source_port
+                  type: int
+              - column:
+                  name: destination_port
+                  type: int
+              - column:
+                  name: protocol
+                  type: varchar(10)
+              - column:
+                  name: action
+                  type: varchar(10)
+  - changeSet:
+      id: 2
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: logs
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: source_ip
+                  type: varchar(15)
+              - column:
+                  name: destination_ip
+                  type: varchar(15)
+              - column:
+                  name: source_port
+                  type: int
+              - column:
+                  name: destination_port
+                  type: int
+              - column:
+                  name: protocol
+                  type: varchar(10)
+              - column:
+                  name: action
+                  type: varchar(10)
+              - column:
+                  name: firewall_rule_id
+                  type: int
+                  constraints:
+                    foreignKeyName: firewall_rule_id
+                    references: rules(rule_id)
+  - changeSet:
+      id: 3
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: role
+                  type: varchar(50)
+  - changeSet:
+      id: 4
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: configurations
+            columns:
+              - column:
+                  name: config_id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: config_name
+                  type: varchar(50)
+              - column:
+                  name: config_data
+                  type: text
+  - changeSet:
+      id: 5
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: alerts
+            columns:
+              - column:
+                  name: alert_name
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: alert_type
+                  type: varchar(50)
+              - column:
+                  name: message
+                  type: text
+              - column:
+                  name: network_interface_id
+                  type: int
+                  constraints:
+                    foreignKeyName: network_interface_id
+                    references: network_interfaces(net_id)
+  - changeSet:
+      id: 6
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: network_interfaces
+            columns:
+              - column:
+                  name: net_id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: ip_address
+                  type: varchar(15)
+              - column:
+                  name: mac_address
+                  type: varchar
+              - column:
+                  name: status
+                  type: varchar(20)
+  - changeSet:
+      id: 7
+      author: ichrak
+      changes:
+        - createTable:
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: audit_id
+                  type: serial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: timestamp
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: action
+                  type: varchar(50)
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    foreignKeyName: user_id
+                    references: users(user_id)
+
+
+
